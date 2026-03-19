@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchTokenListRequest } from "../redux/actions/tokenAction";
+import { ArrowDropDown } from "@mui/icons-material";
 import TokenListLogo from "../assets/img/Tokenbar-Logo.png";
 import TopToken from "./common/TopToken";
 import TokenTable from "./TokenTable";
@@ -34,6 +35,7 @@ const TokenList = () => {
   }, [fetchTokenListRequest]);
 
   const tokenList = useSelector((state) => state.tokenReducer.tokenList);
+  const selectedToken = useSelector((state) => state.tokenReducer.selectedToken);
   const loading = useSelector((state) => state.tokenReducer.loading);
   const error = useSelector((state) => state.tokenReducer.error);
 
@@ -61,11 +63,19 @@ const TokenList = () => {
   });
 
   const [isEditing, setIsEditing] = useState(false);
-  const [text, setText] = useState("Select Token/Contract Address ⌄");
+  const [text, setText] = useState("Select Token/Contract Address");
 
   useEffect(() => {
     setFilteredTokenList([...tokenList]);
   }, [tokenList, isEditing]);
+
+  useEffect(() => {
+    if (selectedToken) {
+      setIsEditing(false);
+      setFilteredTokenList([...tokenList]);
+      setText("Select Token/Contract Address");
+    }
+  }, [selectedToken]);
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -95,7 +105,7 @@ const TokenList = () => {
   const handleSaveClick = () => {
     setIsEditing(false);
     setFilteredTokenList([...tokenList]);
-    setText("Select Token/Contract Address ⌄");
+    setText("Select Token/Contract Address");
     // Perform any save operation with the edited text here
   };
 
@@ -131,9 +141,10 @@ const TokenList = () => {
           <button
             onClick={handleEditClick}
             className="dropdown-button"
-            style={{ overflow: "hidden", fontFamily: "altivo" }}
+            style={{ overflow: "hidden", fontFamily: "altivo", display: "flex", alignItems: "center", justifyContent: "center" }}
           >
             {text}
+            <ArrowDropDown style={{ fontSize: "20px" }} />
           </button>
         )}
         {isEditing && (

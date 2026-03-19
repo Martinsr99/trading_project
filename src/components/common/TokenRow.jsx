@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { selectToken } from "../../redux/actions/tokenAction";
 import { checkImg, formatNumber } from "../../utils/funcs";
 import { svg2img } from "../../utils/randomAvatar";
 import { green } from "@mui/material/colors";
@@ -6,6 +8,7 @@ import { removeW } from "../../utils/funcs";
 import "./style.css";
 
 const TokenRow = ({ data }) => {
+  const dispatch = useDispatch();
   const [imageExists, setImageExists] = useState(false);
 
   // useEffect(() => {
@@ -22,7 +25,7 @@ const TokenRow = ({ data }) => {
   // }, [data.symbol]);
 
   return (
-    <tr>
+    <tr onClick={() => dispatch(selectToken({ ...data }))} style={{ cursor: "pointer" }}>
       <td
         style={{
           display: "flex",
